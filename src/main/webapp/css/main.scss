@@ -1,0 +1,113 @@
+// Variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$background-color: #f8f9fa;
+$border-color: #dee2e6;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Global styles
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: $background-color;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+  flex: 2;
+  padding: 20px;
+}
+
+.recap-container {
+  flex: 1;
+  padding: 20px;
+  background-color: $background-color;
+  border-left: 1px solid $border-color;
+}
+
+// Navigation
+.steps {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid $border-color;
+}
+
+.step {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  &.active {
+    font-weight: bold;
+    border-bottom: 2px solid $primary-color;
+  }
+}
+
+// Form styles
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+.radio-group {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  background-color: $primary-color;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+// Recap styles
+#recap {
+  background-color: #fff;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  padding: 10px;
+}
