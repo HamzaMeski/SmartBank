@@ -124,6 +124,48 @@
                 <button type="submit">Demander ce crédit</button>
             </div>
         </form>
+        <!-- listing loan demands -->
+        <div class="credit-requests-container" style="display: none;">
+            <h2>Liste des demandes de crédit</h2>
+            <div class="filter-controls">
+                <input type="date" id="filterDate" name="filterDate">
+                <select id="filterStatus" name="filterStatus">
+                    <option value="">Tous les statuts</option>
+                    <option value="PENDING">En attente</option>
+                    <option value="APPROVED">Approuvé</option>
+                    <option value="REJECTED">Rejeté</option>
+                </select>
+                <button id="applyFilter">Appliquer le filtre</button>
+            </div>
+            <table id="creditRequestsTable">
+                <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Durée</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Credit requests will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="statusUpdateModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Mettre à jour le statut</h3>
+                <select id="newStatus">
+                    <option value="PENDING">En attente</option>
+                    <option value="APPROVED">Approuvé</option>
+                    <option value="REJECTED">Rejeté</option>
+                </select>
+                <button id="updateStatus">Mettre à jour</button>
+                <button id="closeModal">Fermer</button>
+            </div>
+        </div>
     </div>
 
     <div class="recap-container">
