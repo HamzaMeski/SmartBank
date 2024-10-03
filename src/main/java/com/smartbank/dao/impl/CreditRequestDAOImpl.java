@@ -44,7 +44,7 @@ public class CreditRequestDAOImpl implements CreditRequestDAO {
                 "SELECT c FROM CreditRequest c WHERE c.date = :date AND c.etat = :status", CreditRequest.class);
         query.setParameter("date", date);
         query.setParameter("status", status);
-        return query.getResultList();
+        return query.getResultList(); 
     }
 
     @Override
