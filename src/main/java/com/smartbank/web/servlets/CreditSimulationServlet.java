@@ -6,6 +6,7 @@ import com.smartbank.dao.CreditRequestDAO;
 import com.smartbank.dao.impl.CreditRequestDAOImpl;
 import com.smartbank.model.CreditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartbank.model.CreditStatus;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

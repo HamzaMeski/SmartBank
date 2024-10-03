@@ -3,6 +3,7 @@ package com.smartbank.dao.impl;
 import com.smartbank.dao.CreditRequestDAO;
 import com.smartbank.model.CreditRequest;
 import com.smartbank.util.EntityManagerFactorySingleton;
+import com.smartbank.model.CreditStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -44,7 +45,7 @@ public class CreditRequestDAOImpl implements CreditRequestDAO {
                 "SELECT c FROM CreditRequest c WHERE c.date = :date AND c.etat = :status", CreditRequest.class);
         query.setParameter("date", date);
         query.setParameter("status", status);
-        return query.getResultList(); 
+        return query.getResultList();
     }
 
     @Override
