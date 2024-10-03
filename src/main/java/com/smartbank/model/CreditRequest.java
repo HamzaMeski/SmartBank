@@ -81,7 +81,3 @@ public class CreditRequest {
         this.remarques = remarques;
     }
 }
-
-enum CreditStatus {
-    PENDING, APPROVED, REJECTED
-}
