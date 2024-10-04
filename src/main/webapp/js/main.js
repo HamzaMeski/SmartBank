@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         if (validateStep(currentStep)) {
             console.log('Form submitted:', formData);
-            // Here you can send the formData to your server or perform any other action
+            // Here we can send formData to the server
         }
     });
 
