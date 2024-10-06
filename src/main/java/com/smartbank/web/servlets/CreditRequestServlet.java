@@ -6,27 +6,31 @@ import com.smartbank.dao.impl.CreditRequestDAOImpl;
 import com.smartbank.dao.impl.StatusDAOImpl;
 import com.smartbank.model.CreditRequest;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Logger;
 
 @WebServlet("/creditRequest")
 public class CreditRequestServlet extends HttpServlet {
-
+    private static final Logger LOGGER = Logger.getLogger(CreditRequestServlet.class.getName());
     private CreditRequestService creditRequestService;
 
     @Override
     public void init() throws ServletException {
+        LOGGER.info("Servlet created here");
         creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOGGER.info("Received a POST request");
+        System.out.println("Servlet POST method called");
         try {
             CreditRequest creditRequest = createCreditRequestFromParameters(request);
             creditRequestService.submitCreditRequest(creditRequest);

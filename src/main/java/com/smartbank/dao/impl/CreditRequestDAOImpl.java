@@ -4,13 +4,12 @@ import com.smartbank.dao.CreditRequestDAO;
 import com.smartbank.model.CreditRequest;
 import com.smartbank.util.EntityManagerFactorySingleton;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 
 public class CreditRequestDAOImpl implements CreditRequestDAO {
-
     private EntityManager entityManager;
 
     public CreditRequestDAOImpl() {

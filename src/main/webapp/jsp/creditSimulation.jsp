@@ -23,7 +23,7 @@
             <div class="step" data-step="3">Mes infos personnelles</div>
         </nav>
 
-        <form id="creditForm">
+        <form id="creditForm" action="${pageContext.request.contextPath}/creditRequest" method="POST">
             <div class="step-content" id="step1">
                 <h2>Simuler mon crédit</h2>
                 <div class="form-group">
