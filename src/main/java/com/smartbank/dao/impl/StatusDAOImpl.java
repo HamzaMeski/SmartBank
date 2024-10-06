@@ -1,14 +1,17 @@
 package com.smartbank.dao.impl;
 
+import com.smartbank.dao.CreditRequestDAO;
 import com.smartbank.dao.StatusDAO;
 import com.smartbank.model.Status;
 import com.smartbank.util.EntityManagerFactorySingleton;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+import java.util.logging.Logger;
 
 public class StatusDAOImpl implements StatusDAO {
+    private static final Logger LOGGER = Logger.getLogger(CreditRequestDAO.class.getCanonicalName());
 
     private EntityManager entityManager;
 
