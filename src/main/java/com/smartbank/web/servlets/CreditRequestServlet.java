@@ -23,7 +23,8 @@ public class CreditRequestServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        LOGGER.info("Servlet created here");
+        LOGGER.info("Servlet Initialization");
+        System.out.println("servlet initialization");
         creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
     }
 
@@ -34,10 +35,10 @@ public class CreditRequestServlet extends HttpServlet {
         try {
             CreditRequest creditRequest = createCreditRequestFromParameters(request);
             creditRequestService.submitCreditRequest(creditRequest);
-            response.sendRedirect(request.getContextPath() + "/confirmation.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/success.jsp");
         } catch (Exception e) {
             request.setAttribute("error", "An error occurred: " + e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
         }
     }
 
