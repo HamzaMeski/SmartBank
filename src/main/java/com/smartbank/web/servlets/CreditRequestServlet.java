@@ -24,7 +24,6 @@ public class CreditRequestServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         LOGGER.info("Servlet Initialization");
-        System.out.println("servlet initialization");
         creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
     }
 

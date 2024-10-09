@@ -11,6 +11,6 @@
     <title>Title</title>
 </head>
 <body>
-    <div>Some wrong!</div>
+    <div>Something went wrong!</div>
 </body>
 </html>
