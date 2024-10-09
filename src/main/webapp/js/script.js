@@ -1,111 +1,145 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('creditForm');
-    const steps = document.querySelectorAll('.step');
-    const stepContents = document.querySelectorAll('.step-content');
-    const nextButtons = document.querySelectorAll('.next-step');
-    const recap = document.getElementById('recap');
-    let currentStep = 1;
+document.addEventListener("DOMContentLoaded", () => {
+    const steps = document.querySelectorAll(".step");
+    const formSections = document.querySelectorAll("section.loan-form");
+    const continueButtons = document.querySelectorAll(".btn-submit");
+    const recapContent = document.getElementById("recap-content");
+    const stepIndicators = document.querySelectorAll(".steps .step");
+    let currentStep = 0;
+
+    // Form data object to capture filled values
     const formData = {};
 
-    // Synchronize range inputs with number inputs
-    const syncInputs = (inputId, rangeId) => {
-        const input = document.getElementById(inputId);
-        const range = document.getElementById(rangeId);
-        input.addEventListener('input', () => {
-            range.value = input.value;
-            updateRecap();
-        });
-        range.addEventListener('input', () => {
-            input.value = range.value;
-            updateRecap();
-        });
-    };
-
-    syncInputs('montant', 'montantRange');
-    syncInputs('duree', 'dureeRange');
-    syncInputs('mensualites', 'mensualitesRange');
-
-    // Update recap
+    // Function to update the recap section
     const updateRecap = () => {
-        const allInputs = form.querySelectorAll('input, select');
-        allInputs.forEach(input => {
-            if (input.name && (input.type !== 'radio' || input.checked)) {
-                formData[input.name] = input.value;
-            }
+        recapContent.innerHTML = '';  // Clear existing content
+        Object.keys(formData).forEach((key) => {
+            const fieldElement = document.createElement('p');
+            fieldElement.classList.add("recap-personel");
+            fieldElement.innerHTML = `<strong>${key}</strong>: ${formData[key]}`;
+            recapContent.appendChild(fieldElement);
         });
-
-        // Remove any empty keys
-        Object.keys(formData).forEach(key => {
-            if (!key.trim()) {
-                delete formData[key];
-            }
-        });
-
-        recap.innerHTML = Object.entries(formData)
-            .map(([key, value]) => `<p><strong>${key}:</strong> ${value}</p>`)
-            .join('');
     };
 
-    // Handle next step buttons and step navigation
-    nextButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            if (validateStep(currentStep)) {
-                currentStep++;
-                updateStepVisibility();
+    // Function to navigate to a particular section
+    const showSection = (index) => {
+        formSections.forEach((section, i) => {
+            const inputs = section.querySelectorAll("input, select, textarea");
+
+            // Show or hide the section based on the index
+            section.style.display = i === index ? "block" : "none";
+
+            // Toggle required attributes based on visibility
+            inputs.forEach(input => {
+                if (i === index) {
+                    input.setAttribute("required", "true");
+                } else {
+                    input.removeAttribute("required");
+                }
+            });
+        });
+        steps.forEach((step, i) => {
+            step.classList.toggle("active", i === index);
+        });
+        currentStep = index;
+    };
+
+    // Check if all required fields in a section are filled
+    const isSectionValid = (sectionIndex) => {
+        const inputs = formSections[sectionIndex].querySelectorAll("input, select, textarea");
+        return Array.from(inputs).every(input => input.checkValidity());
+    };
+
+    // Enable navigation between sections if all sections are filled
+    const toggleStepNavigation = () => {
+        stepIndicators.forEach((step, index) => {
+            step.classList.toggle("navigable", isSectionValid(index));
+        });
+    };
+
+    // Real-time form data collection
+    const inputs = document.querySelectorAll("input, select, textarea");
+    inputs.forEach((input) => {
+        input.addEventListener("input", () => {
+            const name = input.name;
+            if (name) {
+                formData[name] = input.value;
+                updateRecap();
+                toggleStepNavigation();
             }
         });
     });
 
-    steps.forEach((step, index) => {
-        step.addEventListener('click', () => {
-            if (validateStep(currentStep)) {
-                currentStep = index + 1;
-                updateStepVisibility();
-            }
-        });
-    });
+    // Initial display
+    showSection(currentStep);
 
-    // Validate step
-    const validateStep = (step) => {
-        const currentInputs = stepContents[step - 1].querySelectorAll('input, select');
-        let isValid = true;
-        currentInputs.forEach(input => {
-            if (input.required && !input.value) {
-                isValid = false;
-                input.classList.add('error');
+    // Continue button event listener for moving to the next section
+    continueButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            if (isSectionValid(currentStep)) {
+                if (currentStep < formSections.length - 1) {
+                    showSection(currentStep + 1);
+                }
             } else {
-                input.classList.remove('error');
+                alert("Please fill all the fields in this section before continuing.");
             }
         });
-        return isValid;
-    };
+    });
 
-    // Update step visibility
-    const updateStepVisibility = () => {
-        stepContents.forEach((content, index) => {
-            content.style.display = index === currentStep - 1 ? 'block' : 'none';
+    // Step navigation by clicking on step titles
+    stepIndicators.forEach((step, index) => {
+        step.addEventListener("click", () => {
+            if (isSectionValid(index)) {
+                showSection(index);
+            }
         });
-        steps.forEach((step, index) => {
-            step.classList.toggle('active', index === currentStep - 1);
-        });
-        updateRecap();
-    };
+    });
 
-    // Handle form submission
-    form.addEventListener('submit', (e) => {
-        // e.preventDefault();
-        if (validateStep(currentStep)) {
-            console.log('Form submitted:', formData);
-
-            // Here we can send formData to the server
+    /*
+    // Form submit handler to display data
+    document.getElementById("creditForm").addEventListener("submit", (event) => {
+        // event.preventDefault();
+        if (isSectionValid(formSections.length - 1)) {
+            alert(`Form Submitted Successfully!\nForm Data: ${JSON.stringify(formData, null, 2)}`);
+        } else {
+            alert("Please fill all the fields in the last section before submitting.");
         }
     });
+    */
 
-    // Initialize the form
-    updateStepVisibility();
+    // Range input handlers for syncing with number inputs
+    const amountInput = document.getElementById("montant");
+    const amountRange = document.getElementById("amount-range");
+    const durationInput = document.getElementById("duree");
+    const durationRange = document.getElementById("duration-range");
+    const mensualitesInput = document.getElementById("mensualites");
+    const mensualitesRange = document.getElementById("monthly-range");
 
-    // Add input event listeners to all form fields
-    form.querySelectorAll('input, select').forEach(input => {
-        input.addEventListener('input', updateRecap);
+    const syncInputs = (inputElement, rangeElement) => {
+        inputElement.addEventListener("input", () => {
+            rangeElement.value = inputElement.value;
+            formData[inputElement.name] = inputElement.value;
+            updateRecap();
+        });
+        rangeElement.addEventListener("input", () => {
+            inputElement.value = rangeElement.value;
+            formData[inputElement.name] = rangeElement.value;
+            updateRecap();
+        });
+    };
+
+    syncInputs(amountInput, amountRange);
+    syncInputs(durationInput, durationRange);
+    syncInputs(mensualitesInput, mensualitesRange);
+
+    // Show/Hide additional fields based on radio selection
+    const creditRadioGroup = document.getElementById("credit-radio-group");
+    const additionalInputsContainer = document.getElementById("additional-inputs");
+
+    creditRadioGroup.addEventListener("change", (event) => {
+        if (event.target.value === "Oui") {
+            additionalInputsContainer.style.display = "block";
+        } else {
+            additionalInputsContainer.style.display = "none";
+        }
     });
 });

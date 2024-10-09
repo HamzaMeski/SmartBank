@@ -11,167 +11,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Crédit</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <title>Demander mon crédit en ligne</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
 </head>
+
 <body>
 <div class="container">
-    <div class="form-container">
-        <nav class="steps">
-            <div class="step active" data-step="1">Simuler mon crédit</div>
-            <div class="step" data-step="2">Mes coordonnées</div>
-            <div class="step" data-step="3">Mes infos personnelles</div>
-        </nav>
-
-        <form id="creditForm" action="${pageContext.request.contextPath}/creditRequest" method="POST">
-            <div class="step-content" id="step1">
-                <h2>Simuler mon crédit</h2>
-                <div class="form-group">
-                    <label for="projet">Mon projet:</label>
-                    <select id="projet" name="projet" required>
-                        <option value="">Sélectionnez votre projet</option>
-                        <option value="immobilier">Immobilier</option>
-                        <option value="automobile">Automobile</option>
-                        <option value="personnel">Personnel</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="status">Je suis:</label>
-                    <select id="status" name="status" required>
-                        <option value="">Sélectionnez votre statut</option>
-                        <option value="fonctionnaire">Fonctionnaire</option>
-                        <option value="salarie">Salarié</option>
-                        <option value="independant">Indépendant</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="montant">Montant (en DH):</label>
-                    <input type="number" id="montant" name="montant" required min="0">
-                    <input type="range" id="montantRange" min="0" max="1000000" step="1000">
-                </div>
-                <div class="form-group">
-                    <label for="duree">Durée (en mois):</label>
-                    <input type="number" id="duree" name="duree" required min="1">
-                    <input type="range" id="dureeRange" min="1" max="120" step="1">
-                </div>
-                <div class="form-group">
-                    <label for="mensualites">Mensualités (en DH):</label>
-                    <input type="number" id="mensualites" name="mensualites" required min="0">
-                    <input type="range" id="mensualitesRange" min="0" max="100000" step="100">
-                </div>
-                <button type="button" class="next-step">Continuer sans engagement</button>
+    <div class="header">
+        <h1>Demander mon crédit en ligne</h1>
+        <a href="#" class="back-link">← Retour</a>
+    </div>
+    <section>
+        <div class="steps-content">
+            <div class="steps">
+                <div class="step active" id="step-1-indicator"><span>1</span> Simuler mon crédit</div>
+                <div class="step" id="step-2-indicator"><span>2</span> Mes coordonnées</div>
+                <div class="step" id="step-3-indicator"><span>3</span> Mes infos personnelles</div>
             </div>
 
-            <div class="step-content" id="step2" style="display: none;">
-                <h2>Mes coordonnées</h2>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="telephone">Téléphone mobile:</label>
-                    <input type="tel" id="telephone" name="telephone" required>
-                </div>
-                <button type="button" class="next-step">Continuer sans engagement</button>
-            </div>
+            <form id="creditForm" class="content-wrapper" action="${pageContext.request.contextPath}/creditRequest" method="POST">
+                <section class="loan-form step-1" id="step-1-form">
+                    <div id="loan-form">
+                        <div class="form-group">
+                            <label for="projet">Mon projet</label>
+                            <select id="projet" name="projet">
+                                <option value="personal-loan">J'ai besoin d'argent</option>
+                                <option value="vehicle-used">Je finance mon véhicule d'occasion</option>
+                                <option value="unexpected-expenses">Je Gère mes imprévus</option>
+                                <option value="vehicle-new">Je finance mon véhicule neuf</option>
+                                <option value="home-equipment">J'équipe ma maison</option>
+                            </select>
+                        </div>
 
-            <div class="step-content" id="step3" style="display: none;">
-                <h2>Mes infos personnelles</h2>
-                <div class="form-group">
-                    <label>Civilité:</label>
-                    <div class="radio-group">
-                        <input type="radio" id="madame" name="civilite" value="madame" required>
-                        <label for="madame">Madame</label>
-                        <input type="radio" id="mademoiselle" name="civilite" value="mademoiselle">
-                        <label for="mademoiselle">Mademoiselle</label>
-                        <input type="radio" id="monsieur" name="civilite" value="monsieur">
-                        <label for="monsieur">Monsieur</label>
+                        <div class="form-group">
+                            <label for="status">Je suis</label>
+                            <select id="status" name="status">
+                                <option value="fonctionnaire">Fonctionnaire</option>
+                                <option value="secteur-prive">Salarié du secteur privé</option>
+                                <option value="profession-libre">Profession libérale</option>
+                                <option value="commercant">Commerçant</option>
+                                <option value="artisan">Artisan</option>
+                                <option value="retraite">Retraité</option>
+                                <option value="autres">Autres professions</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <label for="montant">Montant (en DH)</label>
+                                <input class="price" type="number" id="montant" name="montant" value="10000" min="1000" max="50000">
+                                <input type="range" id="amount-range" value="10000" min="1000" max="50000">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <label for="duree">Durée (en mois)</label>
+                                <input class="price" type="number" id="duree" name="duree" value="24" min="12" max="60">
+                                <input type="range" id="duration-range" value="24" min="12" max="60">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <label for="mensualites">Mensualités (en DH)</label>
+                                <input type="number" id="mensualites" name="mensualites" step="0.01" required />
+                                <input type="range" id="monthly-range" value="482.95" min="100" max="1000" step="0.01" >
+                            </div>
+                        </div>
+
+                        <div class="btn-submit">Continuer<br><span>Sans engagement</span></div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="nom">Nom:</label>
-                    <input type="text" id="nom" name="nom" required>
-                </div>
-                <div class="form-group">
-                    <label for="prenom">Prénom:</label>
-                    <input type="text" id="prenom" name="prenom" required>
-                </div>
-                <div class="form-group">
-                    <label for="cin">Numéro CIN / Carte de séjour:</label>
-                    <input type="text" id="cin" name="cin" required>
-                </div>
-                <div class="form-group">
-                    <label for="dateNaissance">Date de naissance:</label>
-                    <input type="date" id="dateNaissance" name="dateNaissance" required>
-                </div>
-                <div class="form-group">
-                    <label for="dateEmbauche">Date d'embauche/début de l'activité:</label>
-                    <input type="date" id="dateEmbauche" name="dateEmbauche" required>
-                </div>
-                <div class="form-group">
-                    <label for="revenuMensuel">Total revenus mensuels (net en DH):</label>
-                    <input type="number" id="revenuMensuel" name="revenuMensuel" required min="0">
-                </div>
-                <div class="form-group">
-                    <label>Avez-vous des crédits en cours ?</label>
-                    <div class="radio-group">
-                        <input type="radio" id="creditOui" name="creditEnCours" value="oui" required>
-                        <label for="creditOui">Oui</label>
-                        <input type="radio" id="creditNon" name="creditEnCours" value="non">
-                        <label for="creditNon">Non</label>
+                </section>
+
+                <section class="loan-form step-2" id="step-2-form" style="display: none;">
+                    <div id="contact-form">
+                        <div class="form-group-step2">
+                            <input type="email" id="email" name="email" placeholder=" " required>
+                            <label for="email">Email*</label>
+                        </div>
+                        <div class="form-group-step2">
+                            <input type="tel" id="telephone" name="telephone" placeholder=" " required>
+                            <label for="telephone">Téléphone Mobile*</label>
+                        </div>
+                        <div  class="btn-submit">Continuer<br><span>Sans engagement</span></div>
                     </div>
-                </div>
-                <button type="submit">Demander ce crédit</button>
-            </div>
-        </form>
-        <!-- listing loan demands -->
-        <div class="credit-requests-container" style="display: none;">
-            <h2>Liste des demandes de crédit</h2>
-            <div class="filter-controls">
-                <input type="date" id="filterDate" name="filterDate">
-                <select id="filterStatus" name="filterStatus">
-                    <option value="">Tous les statuts</option>
-                    <option value="PENDING">En attente</option>
-                    <option value="APPROVED">Approuvé</option>
-                    <option value="REJECTED">Rejeté</option>
-                </select>
-                <button id="applyFilter">Appliquer le filtre</button>
-            </div>
-            <table id="creditRequestsTable">
-                <thead>
-                <tr>
-                    <th>Numéro</th>
-                    <th>Date</th>
-                    <th>Montant</th>
-                    <th>Durée</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Credit requests will be populated here -->
-                </tbody>
-            </table>
+                </section>
+
+                <section class="loan-form step-3" id="step-3-form" style="display: none;">
+                    <div id="personal-info-form">
+                        <label>Civilité</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="civilite" value="Madame" required>
+                                <span>Madame</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="civilite" value="Mademoiselle" required>
+                                <span>Mademoiselle</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="civilite" value="Monsieur" required>
+                                <span>Monsieur</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group-step2">
+                            <input name="nom" type="text" id="nom" placeholder=" " required>
+                            <label for="nom">Nom</label>
+                        </div>
+
+                        <div class="form-group-step2">
+                            <input name="prenom" type="text" id="prenom" placeholder=" " required>
+                            <label for="prenom">Prénom</label>
+                        </div>
+
+                        <div class="form-group-step2">
+                            <input name="cin" type="text" id="cin" placeholder=" " required>
+                            <label for="cin">Numéro CIN / Carte de séjour</label>
+                        </div>
+
+                        <div class="form-group-step2">
+                            <input name="dateNaissance" type="text" id="dateNaissance" placeholder="JJ/MM/YYYY" required>
+                            <label for="dateNaissance">Date de naissance</label>
+                        </div>
+
+                        <div class="form-group-step2">
+                            <input name="dateEmbauche" type="text" id="dateEmbauche" placeholder="JJ/MM/YYYY" required>
+                            <label for="dateEmbauche">Date d'embauche / début de l'activité</label>
+                        </div>
+
+                        <div class="form-group-step2">
+                            <input name="revenuMensuel" type="text" id="revenuMensuel" placeholder=" " required>
+                            <label for="revenuMensuel">Total revenus mensuels (net en DH)</label>
+                        </div>
+
+                        <label>Avez-vous des crédits en cours?</label>
+                        <div class="radio-group" id="credit-radio-group">
+                            <label>
+                                <input type="radio" name="creditEnCours" value="Oui" >
+                                <span>Oui</span>
+                            </label>
+
+                            <label>
+                                <input type="radio" name="creditEnCours" value="Non" checked>
+                                <span>Non</span>
+                            </label>
+                        </div>
+
+                        <div id="additional-inputs" style="display: none;">
+                            <div class="form-group-step2">
+                                <input type="text" id="additional-input1" placeholder="" required>
+                                <label for="additional-input1"> Mensualité crédit Immo (net en DH)*</label>
+                            </div>
+                            <div class="form-group-step2">
+                                <input type="text" id="additional-input2" placeholder=" " required>
+                                <label for="additional-input2"> Mensualité autres crédits (net en DH)*</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group-step2 alpha">
+                            <input type="checkbox" id="mustbechecked" required>
+                            <p class="checkbox-label">J'ai lu et j'accepte les conditions générales d'utilisation figurant sur les informations légales,
+                                notamment la mention relative à la protection des données personnelles</p>
+                        </div>
+
+                        <button type="submit" class="form-submit">Demande ce crédit</button>
+                    </div>
+                </section>
+            </form>
+
+            <section>
+                <p class="terms">Simulation à titre indicatif et non contractuelle. La mensualité minimale est de 180 dirhams. Un client Wafasalaf peut bénéficier d'une tarification plus avantageuse en fonction de ses conditions préférentielles.
+                    <br><br>
+                    Conformément à la loi 09-08, vous disposez d'un droit d'accès, de rectification et d'opposition au traitement de vos données personnelles. Ce traitement est autorisé par la CNDP sous le numéro A-GC-206/2014.
+                </p>
+            </section>
         </div>
 
-        <div id="statusUpdateModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <h3>Mettre à jour le statut</h3>
-                <select id="newStatus">
-                    <option value="PENDING">En attente</option>
-                    <option value="APPROVED">Approuvé</option>
-                    <option value="REJECTED">Rejeté</option>
-                </select>
-                <button id="updateStatus">Mettre à jour</button>
-                <button id="closeModal">Fermer</button>
+        <aside class="recap">
+            <h2>Mon récapitulatif</h2>
+            <div id="recap-content" class="recap-content">
+                <p class="title-recap">Mon projet</p>
+                <p class="recap-personel"><strong>Prêt Personnel</strong></p>
             </div>
-        </div>
-    </div>
+        </aside>
 
-    <div class="recap-container">
-        <h2>Mon récapitulatif</h2>
-        <div id="recap"></div>
-    </div>
+    </section>
 </div>
 
 <script src="${pageContext.request.contextPath}/js/script.js"></script>
