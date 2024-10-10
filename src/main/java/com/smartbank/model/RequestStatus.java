@@ -1,7 +1,7 @@
 package com.smartbank.model;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -20,9 +20,8 @@ public class RequestStatus {
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modification_date", nullable = false)
-    private Date modificationDate;
+    private LocalDateTime modificationDate;
 
     @Column(length = 1000)
     private String explanation;
@@ -31,7 +30,7 @@ public class RequestStatus {
     public RequestStatus() {
     }
 
-    public RequestStatus(CreditRequest creditRequest, Status status, Date modificationDate, String explanation) {
+    public RequestStatus(CreditRequest creditRequest, Status status, LocalDateTime modificationDate, String explanation) {
         this.creditRequest = creditRequest;
         this.status = status;
         this.modificationDate = modificationDate;
@@ -63,11 +62,11 @@ public class RequestStatus {
         this.status = status;
     }
 
-    public Date getModificationDate() {
+    public LocalDateTime getModificationDate() {
         return modificationDate;
     }
 
-    public void setModificationDate(Date modificationDate) {
+    public void setModificationDate(LocalDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 
@@ -80,31 +79,4 @@ public class RequestStatus {
     }
 
     // toString method
-    @Override
-    public String toString() {
-        return "RequestStatus{" +
-                "id=" + id +
-                ", creditRequest=" + (creditRequest != null ? creditRequest.getId() : null) +
-                ", status=" + (status != null ? status.getName() : null) +
-                ", modificationDate=" + modificationDate +
-                ", explanation='" + explanation + '\'' +
-                '}';
-    }
-
-    // equals and hashCode methods
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RequestStatus that = (RequestStatus) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(creditRequest, that.creditRequest) &&
-                Objects.equals(status, that.status) &&
-                Objects.equals(modificationDate, that.modificationDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, creditRequest, status, modificationDate);
-    }
 }

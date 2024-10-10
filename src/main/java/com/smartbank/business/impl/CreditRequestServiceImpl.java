@@ -7,7 +7,7 @@ import com.smartbank.model.CreditRequest;
 import com.smartbank.model.RequestStatus;
 import com.smartbank.model.Status;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class CreditRequestServiceImpl implements CreditRequestService {
 
@@ -22,7 +22,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     @Override
     public void submitCreditRequest(CreditRequest creditRequest) {
         // Set the request date
-        creditRequest.setRequestDate(new Date());
+        creditRequest.setRequestDate(LocalDateTime.now());
 
         // Generate a unique request number
         creditRequest.setRequestNumber(generateUniqueRequestNumber());
@@ -38,7 +38,7 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         RequestStatus initialStatus = new RequestStatus();
         initialStatus.setCreditRequest(creditRequest);
         initialStatus.setStatus(pendingStatus);
-        initialStatus.setModificationDate(new Date());
+        initialStatus.setModificationDate(LocalDateTime.now());
         initialStatus.setExplanation("Initial submission");
 
         // Add the initial status to the credit request

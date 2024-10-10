@@ -1,8 +1,9 @@
 package com.smartbank.model;
 
-import com.smartbank.dao.CreditRequestDAO;
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,13 +51,11 @@ public class CreditRequest {
     @Column(nullable = false)
     private String identificationNumber;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
-    @Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date employmentStartDate;
+    private LocalDate employmentStartDate;
 
     @Column(nullable = false)
     private Double monthlyIncome;
@@ -64,9 +63,8 @@ public class CreditRequest {
     @Column(nullable = false)
     private Boolean hasOngoingCredits;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "request_date", nullable = false)
-    private Date requestDate;
+    private LocalDateTime requestDate;
 
     @OneToMany(mappedBy = "creditRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RequestStatus> requestStatuses = new HashSet<>();
@@ -181,19 +179,19 @@ public class CreditRequest {
         this.identificationNumber = identificationNumber;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Date getEmploymentStartDate() {
+    public LocalDate getEmploymentStartDate() {
         return employmentStartDate;
     }
 
-    public void setEmploymentStartDate(Date employmentStartDate) {
+    public void setEmploymentStartDate(LocalDate employmentStartDate) {
         this.employmentStartDate = employmentStartDate;
     }
 
@@ -213,11 +211,11 @@ public class CreditRequest {
         this.hasOngoingCredits = hasOngoingCredits;
     }
 
-    public Date getRequestDate() {
+    public LocalDateTime getRequestDate() {
         return requestDate;
     }
 
-    public void setRequestDate(Date requestDate) {
+    public void setRequestDate(LocalDateTime requestDate) {
         this.requestDate = requestDate;
     }
 
@@ -241,5 +239,4 @@ public class CreditRequest {
     }
 
     // toString, equals, and hashCode methods
-
 }
