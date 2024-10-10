@@ -12,8 +12,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/creditRequest")
@@ -29,26 +31,34 @@ public class CreditRequestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOGGER.info("Received a POST request");
-        System.out.println("Servlet POST method called");
+        LOGGER.info("Servlet POST method called");
+        logFormFields(request);
         try {
             CreditRequest creditRequest = createCreditRequestFromParameters(request);
             creditRequestService.submitCreditRequest(creditRequest);
             response.sendRedirect(request.getContextPath() + "/jsp/success.jsp");
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Exception occurred: ", e);
             request.setAttribute("error", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
         }
     }
 
-    private CreditRequest createCreditRequestFromParameters(HttpServletRequest request) throws ParseException {
+    private void logFormFields(HttpServletRequest request) {
+        LOGGER.info("Form Fields:");
+        request.getParameterMap().forEach((key, value) ->
+                LOGGER.info(key + ": " + String.join(", ", value))
+        );
+    }
+
+    private CreditRequest createCreditRequestFromParameters(HttpServletRequest request) throws DateTimeParseException {
         CreditRequest creditRequest = new CreditRequest();
 
         creditRequest.setProject(request.getParameter("projet"));
         creditRequest.setEmploymentStatus(request.getParameter("status"));
-        creditRequest.setAmount(Double.parseDouble(request.getParameter("montant")));
-        creditRequest.setDuration(Integer.parseInt(request.getParameter("duree")));
-        creditRequest.setMonthlyPayment(Double.parseDouble(request.getParameter("mensualites")));
+        creditRequest.setAmount(parseDoubleOrDefault(request.getParameter("montant"), 0.0));
+        creditRequest.setDuration(parseIntOrDefault(request.getParameter("duree"), 0));
+        creditRequest.setMonthlyPayment(parseDoubleOrDefault(request.getParameter("mensualites"), 0.0));
         creditRequest.setEmail(request.getParameter("email"));
         creditRequest.setPhoneNumber(request.getParameter("telephone"));
         creditRequest.setTitle(request.getParameter("civilite"));
@@ -56,13 +66,39 @@ public class CreditRequestServlet extends HttpServlet {
         creditRequest.setFirstName(request.getParameter("prenom"));
         creditRequest.setIdentificationNumber(request.getParameter("cin"));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        creditRequest.setDateOfBirth(dateFormat.parse(request.getParameter("dateNaissance")));
-        creditRequest.setEmploymentStartDate(dateFormat.parse(request.getParameter("dateEmbauche")));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        creditRequest.setMonthlyIncome(Double.parseDouble(request.getParameter("revenuMensuel")));
-        creditRequest.setHasOngoingCredits(request.getParameter("creditEnCours").equals("oui"));
+        String dateNaissanceStr = request.getParameter("dateNaissance");
+        String dateEmbaucheStr = request.getParameter("dateEmbauche");
+
+        if (dateNaissanceStr != null && !dateNaissanceStr.isEmpty()) {
+            creditRequest.setDateOfBirth(LocalDate.parse(dateNaissanceStr, formatter));
+        }
+        if (dateEmbaucheStr != null && !dateEmbaucheStr.isEmpty()) {
+            creditRequest.setEmploymentStartDate(LocalDate.parse(dateEmbaucheStr, formatter));
+        }
+
+        creditRequest.setMonthlyIncome(parseDoubleOrDefault(request.getParameter("revenuMensuel"), 0.0));
+        creditRequest.setHasOngoingCredits("oui".equalsIgnoreCase(request.getParameter("creditEnCours")));
 
         return creditRequest;
+    }
+
+    private double parseDoubleOrDefault(String value, double defaultValue) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            LOGGER.warning("Failed to parse double value: " + value);
+            return defaultValue;
+        }
+    }
+
+    private int parseIntOrDefault(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            LOGGER.warning("Failed to parse int value: " + value);
+            return defaultValue;
+        }
     }
 }

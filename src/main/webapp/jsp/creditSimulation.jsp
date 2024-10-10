@@ -29,7 +29,7 @@
                 <div class="step" id="step-3-indicator"><span>3</span> Mes infos personnelles</div>
             </div>
 
-            <form id="creditForm" class="content-wrapper" action="${pageContext.request.contextPath}/creditRequest" method="POST">
+            <form novalidate id="creditForm" class="content-wrapper" action="${pageContext.request.contextPath}/creditRequest" method="POST">
                 <section class="loan-form step-1" id="step-1-form">
                     <div id="loan-form">
                         <div class="form-group">
@@ -132,12 +132,12 @@
                         </div>
 
                         <div class="form-group-step2">
-                            <input name="dateNaissance" type="text" id="dateNaissance" placeholder="JJ/MM/YYYY" required>
+                            <input name="dateNaissance" type="date" id="dateNaissance" placeholder="YYYY/MM/JJ" required>
                             <label for="dateNaissance">Date de naissance</label>
                         </div>
 
                         <div class="form-group-step2">
-                            <input name="dateEmbauche" type="text" id="dateEmbauche" placeholder="JJ/MM/YYYY" required>
+                            <input name="dateEmbauche" type="date" id="dateEmbauche" placeholder="YYYY/MM/JJ" required>
                             <label for="dateEmbauche">Date d'embauche / début de l'activité</label>
                         </div>
 

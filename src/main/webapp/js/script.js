@@ -23,19 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to navigate to a particular section
     const showSection = (index) => {
         formSections.forEach((section, i) => {
-            const inputs = section.querySelectorAll("input, select, textarea");
-
-            // Show or hide the section based on the index
             section.style.display = i === index ? "block" : "none";
-
-            // Toggle required attributes based on visibility
-            inputs.forEach(input => {
-                if (i === index) {
-                    input.setAttribute("required", "true");
-                } else {
-                    input.removeAttribute("required");
-                }
-            });
         });
         steps.forEach((step, i) => {
             step.classList.toggle("active", i === index);
@@ -94,10 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /*
     // Form submit handler to display data
+    /*
     document.getElementById("creditForm").addEventListener("submit", (event) => {
-        // event.preventDefault();
+        event.preventDefault();
         if (isSectionValid(formSections.length - 1)) {
             alert(`Form Submitted Successfully!\nForm Data: ${JSON.stringify(formData, null, 2)}`);
         } else {

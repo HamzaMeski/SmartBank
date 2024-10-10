@@ -6,7 +6,8 @@ import com.smartbank.util.EntityManagerFactorySingleton;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CreditRequestDAOImpl implements CreditRequestDAO {
@@ -35,11 +36,11 @@ public class CreditRequestDAOImpl implements CreditRequestDAO {
     }
 
     @Override
-    public List<CreditRequest> findByDateAndStatus(Date date, String status) {
+    public List<CreditRequest> findByDateAndStatus(LocalDateTime date, String status) {
         TypedQuery<CreditRequest> query = entityManager.createQuery(
-                "SELECT cr FROM CreditRequest cr WHERE cr.requestDate = :date AND cr.status = :status",
+                "SELECT cr FROM CreditRequest cr JOIN cr.requestStatuses rs WHERE DATE(cr.requestDate) = :date AND rs.status = :status",
                 CreditRequest.class);
-        query.setParameter("date", date);
+        query.setParameter("date", date.toLocalDate());
         query.setParameter("status", status);
         return query.getResultList();
     }
