@@ -21,30 +21,30 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     @Override
     public void submitCreditRequest(CreditRequest creditRequest) {
-        // Set the request date
+        // Setting the request date
         creditRequest.setRequestDate(LocalDateTime.now());
 
-        // Generate a unique request number
+        // Generating a unique request number
         creditRequest.setRequestNumber(generateUniqueRequestNumber());
 
-        // Get or create the "PENDING" status
+        // Getting or creating the "PENDING" status
         Status pendingStatus = statusDAO.findByName("PENDING");
         if (pendingStatus == null) {
             pendingStatus = new Status("PENDING");
             statusDAO.save(pendingStatus);
         }
 
-        // Create a new RequestStatus
+        // Creating a new RequestStatus
         RequestStatus initialStatus = new RequestStatus();
         initialStatus.setCreditRequest(creditRequest);
         initialStatus.setStatus(pendingStatus);
         initialStatus.setModificationDate(LocalDateTime.now());
         initialStatus.setExplanation("Initial submission");
 
-        // Add the initial status to the credit request
+        // Adding the initial status to the credit request
         creditRequest.addRequestStatus(initialStatus);
 
-        // Save the credit request
+        // Saving the credit request
         creditRequestDAO.save(creditRequest);
     }
 
