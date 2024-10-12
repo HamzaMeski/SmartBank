@@ -6,7 +6,6 @@ import com.smartbank.util.EntityManagerFactorySingleton;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

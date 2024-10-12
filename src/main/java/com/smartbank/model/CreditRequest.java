@@ -237,6 +237,4 @@ public class CreditRequest {
         requestStatuses.remove(requestStatus);
         requestStatus.setCreditRequest(null);
     }
-
-    // toString, equals, and hashCode methods
 }
