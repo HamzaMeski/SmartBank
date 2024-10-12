@@ -6,12 +6,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const stepIndicators = document.querySelectorAll(".steps .step");
     let currentStep = 0;
 
-    // Form data object to capture filled values
     const formData = {};
+
+    // Validation regex patterns
+    const validationPatterns = {
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        telephone: /^0[567]\d{8}$/,
+        nom: /^[A-Za-zÀ-ÿ\s'-]{2,50}$/,
+        prenom: /^[A-Za-zÀ-ÿ\s'-]{2,50}$/,
+        cin: /^[A-Z]{1,2}\d{5,6}$/,
+        revenuMensuel: /^\d+(\.\d{1,2})?$/
+    };
+
+    // Function to validate input against regex
+    const validateInput = (input) => {
+        const pattern = validationPatterns[input.name];
+        if (pattern) {
+            const isValid = pattern.test(input.value);
+            input.setCustomValidity(isValid ? "" : "Invalid input");
+            return isValid;
+        }
+        return true;
+    };
 
     // Function to update the recap section
     const updateRecap = () => {
-        recapContent.innerHTML = '';  // Clear existing content
+        recapContent.innerHTML = '';
         Object.keys(formData).forEach((key) => {
             const fieldElement = document.createElement('p');
             fieldElement.classList.add("recap-personel");
@@ -31,10 +51,10 @@ document.addEventListener("DOMContentLoaded", () => {
         currentStep = index;
     };
 
-    // Check if all required fields in a section are filled
+    // Check if all required fields in a section are filled and valid
     const isSectionValid = (sectionIndex) => {
         const inputs = formSections[sectionIndex].querySelectorAll("input, select, textarea");
-        return Array.from(inputs).every(input => input.checkValidity());
+        return Array.from(inputs).every(input => input.checkValidity() && validateInput(input));
     };
 
     // Enable navigation between sections if all sections are filled
@@ -44,13 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Real-time form data collection
+    // Real-time form data collection and validation
     const inputs = document.querySelectorAll("input, select, textarea");
     inputs.forEach((input) => {
         input.addEventListener("input", () => {
             const name = input.name;
             if (name) {
                 formData[name] = input.value;
+                validateInput(input);
                 updateRecap();
                 toggleStepNavigation();
             }
@@ -68,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     showSection(currentStep + 1);
                 }
             } else {
-                alert("Please fill all the fields in this section before continuing.");
+                alert("Please fill all the fields correctly in this section before continuing.");
             }
         });
     });
@@ -82,52 +103,60 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Form submit handler to display data
-    /*
-    document.getElementById("creditForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        if (isSectionValid(formSections.length - 1)) {
-            alert(`Form Submitted Successfully!\nForm Data: ${JSON.stringify(formData, null, 2)}`);
-        } else {
-            alert("Please fill all the fields in the last section before submitting.");
-        }
-    });
-    */
-
-    // Range input handlers for syncing with number inputs
-    const amountInput = document.getElementById("montant");
-    const amountRange = document.getElementById("amount-range");
-    const durationInput = document.getElementById("duree");
-    const durationRange = document.getElementById("duration-range");
+    // Loan calculation logic
+    const montantInput = document.getElementById("montant");
+    const montantRange = document.getElementById("amount-range");
+    const dureeInput = document.getElementById("duree");
+    const dureeRange = document.getElementById("duration-range");
     const mensualitesInput = document.getElementById("mensualites");
     const mensualitesRange = document.getElementById("monthly-range");
 
-    const syncInputs = (inputElement, rangeElement) => {
+    const calculateLoan = (changedField) => {
+        const montant = parseFloat(montantInput.value);
+        const duree = parseInt(dureeInput.value);
+        const tauxAnnuel = 0.05; // 5% annual interest rate (adjust as needed)
+        const tauxMensuel = tauxAnnuel / 12;
+
+        if (changedField !== 'mensualites') {
+            const mensualite = (montant * tauxMensuel) / (1 - Math.pow(1 + tauxMensuel, -duree));
+            mensualitesInput.value = mensualitesRange.value = mensualite.toFixed(2);
+        } else {
+            const mensualite = parseFloat(mensualitesInput.value);
+            const calculatedMontant = (mensualite * (1 - Math.pow(1 + tauxMensuel, -duree))) / tauxMensuel;
+            montantInput.value = montantRange.value = calculatedMontant.toFixed(2);
+        }
+
+        // Update formData
+        formData['montant'] = montantInput.value;
+        formData['duree'] = dureeInput.value;
+        formData['mensualites'] = mensualitesInput.value;
+
+        updateRecap();
+    };
+
+    const syncInputs = (inputElement, rangeElement, field) => {
         inputElement.addEventListener("input", () => {
             rangeElement.value = inputElement.value;
-            formData[inputElement.name] = inputElement.value;
-            updateRecap();
+            calculateLoan(field);
         });
         rangeElement.addEventListener("input", () => {
             inputElement.value = rangeElement.value;
-            formData[inputElement.name] = rangeElement.value;
-            updateRecap();
+            calculateLoan(field);
         });
     };
 
-    syncInputs(amountInput, amountRange);
-    syncInputs(durationInput, durationRange);
-    syncInputs(mensualitesInput, mensualitesRange);
+    syncInputs(montantInput, montantRange, 'montant');
+    syncInputs(dureeInput, dureeRange, 'duree');
+    syncInputs(mensualitesInput, mensualitesRange, 'mensualites');
+
+    // Initial calculation
+    calculateLoan('montant');
 
     // Show/Hide additional fields based on radio selection
     const creditRadioGroup = document.getElementById("credit-radio-group");
     const additionalInputsContainer = document.getElementById("additional-inputs");
 
     creditRadioGroup.addEventListener("change", (event) => {
-        if (event.target.value === "Oui") {
-            additionalInputsContainer.style.display = "block";
-        } else {
-            additionalInputsContainer.style.display = "none";
-        }
+        additionalInputsContainer.style.display = event.target.value === "Oui" ? "block" : "none";
     });
 });
