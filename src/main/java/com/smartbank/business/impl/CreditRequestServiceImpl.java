@@ -6,13 +6,31 @@ import com.smartbank.dao.StatusDAO;
 import com.smartbank.model.CreditRequest;
 import com.smartbank.model.RequestStatus;
 import com.smartbank.model.Status;
+import com.smartbank.exception.ValidationException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class CreditRequestServiceImpl implements CreditRequestService {
 
     private final CreditRequestDAO creditRequestDAO;
     private final StatusDAO statusDAO;
+    private static final double ANNUAL_INTEREST_RATE = 0.05; // 5% annual interest rate
+
+    // Validation regex patterns
+    private static final Map<String, Pattern> VALIDATION_PATTERNS = new HashMap<>();
+    static {
+        VALIDATION_PATTERNS.put("email", Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"));
+        VALIDATION_PATTERNS.put("telephone", Pattern.compile("^0[567]\\d{8}$"));
+        VALIDATION_PATTERNS.put("nom", Pattern.compile("^[A-Za-zÀ-ÿ\\s'-]{2,50}$"));
+        VALIDATION_PATTERNS.put("prenom", Pattern.compile("^[A-Za-zÀ-ÿ\\s'-]{2,50}$"));
+        VALIDATION_PATTERNS.put("cin", Pattern.compile("^[A-Z]{1,2}\\d{5,6}$"));
+        VALIDATION_PATTERNS.put("revenuMensuel", Pattern.compile("^\\d+(\\.\\d{1,2})?$"));
+    }
 
     public CreditRequestServiceImpl(CreditRequestDAO creditRequestDAO, StatusDAO statusDAO) {
         this.creditRequestDAO = creditRequestDAO;
@@ -20,36 +38,109 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     @Override
-    public void submitCreditRequest(CreditRequest creditRequest) {
-        // Setting the request date
-        creditRequest.setRequestDate(LocalDateTime.now());
+    public void submitCreditRequest(CreditRequest creditRequest) throws ValidationException {
+        validateCreditRequest(creditRequest);
+        calculateLoan(creditRequest);
 
-        // Generating a unique request number
+        creditRequest.setRequestDate(LocalDateTime.now());
         creditRequest.setRequestNumber(generateUniqueRequestNumber());
 
-        // Getting or creating the "PENDING" status
         Status pendingStatus = statusDAO.findByName("PENDING");
         if (pendingStatus == null) {
             pendingStatus = new Status("PENDING");
             statusDAO.save(pendingStatus);
         }
 
-        // Creating a new RequestStatus
         RequestStatus initialStatus = new RequestStatus();
         initialStatus.setCreditRequest(creditRequest);
         initialStatus.setStatus(pendingStatus);
         initialStatus.setModificationDate(LocalDateTime.now());
         initialStatus.setExplanation("Initial submission");
 
-        // Adding the initial status to the credit request
         creditRequest.addRequestStatus(initialStatus);
 
-        // Saving the credit request
         creditRequestDAO.save(creditRequest);
     }
 
+    private void validateCreditRequest(CreditRequest creditRequest) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        validateField("email", creditRequest.getEmail(), errors);
+        validateField("telephone", creditRequest.getPhoneNumber(), errors);
+        validateField("nom", creditRequest.getLastName(), errors);
+        validateField("prenom", creditRequest.getFirstName(), errors);
+        validateField("cin", creditRequest.getIdentificationNumber(), errors);
+        validateField("revenuMensuel", String.valueOf(creditRequest.getMonthlyIncome()), errors);
+
+        validateAmount(creditRequest.getAmount(), errors);
+        validateDuration(creditRequest.getDuration(), errors);
+        validateAge(creditRequest.getDateOfBirth(), errors);
+        validateEmploymentDuration(creditRequest.getEmploymentStartDate(), errors);
+
+        if (!errors.isEmpty()) {
+            throw new ValidationException("Validation failed", errors);
+        }
+    }
+
+    private void calculateLoan(CreditRequest creditRequest) {
+        double montant = creditRequest.getAmount();
+        int duree = creditRequest.getDuration();
+        double tauxMensuel = ANNUAL_INTEREST_RATE / 12;
+
+        if (creditRequest.getMonthlyPayment() == null || creditRequest.getMonthlyPayment() == 0) {
+            // Calculate monthly payment if not provided
+            double mensualite = (montant * tauxMensuel) / (1 - Math.pow(1 + tauxMensuel, -duree));
+            creditRequest.setMonthlyPayment(Math.round(mensualite * 100.0) / 100.0); // Round to 2 decimal places
+        } else {
+            // Recalculate amount if monthly payment is provided
+            double mensualite = creditRequest.getMonthlyPayment();
+            double calculatedMontant = (mensualite * (1 - Math.pow(1 + tauxMensuel, -duree))) / tauxMensuel;
+            creditRequest.setAmount(Math.round(calculatedMontant * 100.0) / 100.0); // Round to 2 decimal places
+        }
+    }
+
+    private void validateField(String fieldName, String value, Map<String, String> errors) {
+        Pattern pattern = VALIDATION_PATTERNS.get(fieldName);
+        if (pattern != null && !pattern.matcher(value).matches()) {
+            errors.put(fieldName, "Invalid " + fieldName);
+        }
+    }
+
+    private void validateAmount(Double amount, Map<String, String> errors) {
+        if (amount == null || amount < 1000 || amount > 50000) {
+            errors.put("amount", "Amount must be between 1,000 and 50,000");
+        }
+    }
+
+    private void validateDuration(Integer duration, Map<String, String> errors) {
+        if (duration == null || duration < 12 || duration > 60) {
+            errors.put("duration", "Duration must be between 12 and 60 months");
+        }
+    }
+
+    private void validateAge(LocalDate dateOfBirth, Map<String, String> errors) {
+        if (dateOfBirth == null) {
+            errors.put("dateOfBirth", "Date of birth is required");
+        } else {
+            int age = Period.between(dateOfBirth, LocalDate.now()).getYears();
+            if (age < 18 || age > 65) {
+                errors.put("age", "Age must be between 18 and 65");
+            }
+        }
+    }
+
+    private void validateEmploymentDuration(LocalDate employmentStartDate, Map<String, String> errors) {
+        if (employmentStartDate == null) {
+            errors.put("employmentStartDate", "Employment start date is required");
+        } else {
+            int employmentDuration = Period.between(employmentStartDate, LocalDate.now()).getYears();
+            if (employmentDuration < 1) {
+                errors.put("employmentDuration", "Minimum employment duration is 1 year");
+            }
+        }
+    }
+
     private String generateUniqueRequestNumber() {
-        // Implementing a method to generate a unique request number
         return "REQ-" + System.currentTimeMillis();
     }
 }
