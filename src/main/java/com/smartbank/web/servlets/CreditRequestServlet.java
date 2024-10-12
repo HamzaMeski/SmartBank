@@ -40,6 +40,9 @@ public class CreditRequestServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/jsp/success.jsp");
         } catch(ValidationException ve) {
             LOGGER.info("Validation error occured: "+ ve.getErrors());
+            request.setAttribute("errors", ve.getErrors());
+            request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Exception occurred: ", e);
             request.setAttribute("error", "An error occurred: " + e.getMessage());
