@@ -18,15 +18,47 @@ document.addEventListener("DOMContentLoaded", () => {
         revenuMensuel: /^\d+(\.\d{1,2})?$/
     };
 
-    // Function to validate input against regex
+    const validateAge = (dateOfBirth) => {
+        const birthDate = new Date(dateOfBirth);
+        const age = (new Date().getFullYear()) - birthDate.getFullYear();
+        return age >= 18 && age <= 65;
+    };
+
+    const validateEmploymentDuration = (employmentStartDate) => {
+        const startDate = new Date(employmentStartDate);
+        const yearsEmployed = (new Date().getFullYear()) - startDate.getFullYear();
+        return yearsEmployed >= 1;
+    };
+
     const validateInput = (input) => {
         const pattern = validationPatterns[input.name];
+        let isValid = true;
+        let errorMessage = "";
+
         if (pattern) {
-            const isValid = pattern.test(input.value);
-            input.setCustomValidity(isValid ? "" : "Invalid input");
-            return isValid;
+            isValid = pattern.test(input.value);
+            errorMessage = isValid ? "" : `Invalid ${input.name}`;
+        } else if (input.name === "dateNaissance") {
+            isValid = validateAge(input.value);
+            errorMessage = isValid ? "" : "Age must be between 18 and 65";
+        } else if (input.name === "dateEmbauche") {
+            isValid = validateEmploymentDuration(input.value);
+            errorMessage = isValid ? "" : "Minimum employment duration is 1 year";
+        } else if (input.name === "montant") {
+            const amount = parseFloat(input.value);
+            isValid = amount >= 1000 && amount <= 50000;
+            errorMessage = isValid ? "" : "Amount must be between 1,000 and 50,000";
+        } else if (input.name === "duree") {
+            const duration = parseInt(input.value);
+            isValid = duration >= 12 && duration <= 60;
+            errorMessage = isValid ? "" : "Duration must be between 12 and 60 months";
         }
-        return true;
+
+        input.setCustomValidity(errorMessage);
+        if (!isValid) {
+            input.reportValidity(); // This will show the validation message
+        }
+        return isValid;
     };
 
     // Function to update the recap section
@@ -54,7 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check if all required fields in a section are filled and valid
     const isSectionValid = (sectionIndex) => {
         const inputs = formSections[sectionIndex].querySelectorAll("input, select, textarea");
-        return Array.from(inputs).every(input => input.checkValidity() && validateInput(input));
+        return Array.from(inputs).every(input => {
+            if (input.type === 'radio') {
+                const name = input.name;
+                const radioGroup = document.querySelectorAll(`input[name="${name}"]`);
+                return Array.from(radioGroup).some(radio => radio.checked);
+            }
+            return input.checkValidity() && validateInput(input);
+        });
     };
 
     // Enable navigation between sections if all sections are filled
