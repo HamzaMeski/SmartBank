@@ -4,6 +4,7 @@ import com.smartbank.business.CreditRequestService;
 import com.smartbank.business.impl.CreditRequestServiceImpl;
 import com.smartbank.dao.impl.CreditRequestDAOImpl;
 import com.smartbank.dao.impl.StatusDAOImpl;
+import com.smartbank.exception.ValidationException;
 import com.smartbank.model.CreditRequest;
 
 import jakarta.servlet.ServletException;
@@ -37,6 +38,8 @@ public class CreditRequestServlet extends HttpServlet {
             CreditRequest creditRequest = createCreditRequestFromParameters(request);
             creditRequestService.submitCreditRequest(creditRequest);
             response.sendRedirect(request.getContextPath() + "/jsp/success.jsp");
+        } catch(ValidationException ve) {
+            LOGGER.info("Validation error occured: "+ ve.getErrors());
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Exception occurred: ", e);
             request.setAttribute("error", "An error occurred: " + e.getMessage());
