@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CreditRequestServiceImpl implements CreditRequestService {
@@ -142,5 +143,34 @@ public class CreditRequestServiceImpl implements CreditRequestService {
 
     private String generateUniqueRequestNumber() {
         return "REQ-" + System.currentTimeMillis();
+    }
+
+
+
+
+    /* Credit List menu */
+    @Override
+    public List<CreditRequest> getAllCreditRequests() {
+        return creditRequestDAO.findAll();
+    }
+
+    @Override
+    public CreditRequest getCreditRequestDetails(Long id) {
+        return creditRequestDAO.findById(id);
+    }
+
+    @Override
+    public void updateCreditRequestStatus(Long id, String newStatus) {
+        CreditRequest request = creditRequestDAO.findById(id);
+        if (request == null) {
+            throw new IllegalArgumentException("Credit request not found");
+        }
+        Status status = statusDAO.findByName(newStatus);
+        if (status == null) {
+            throw new IllegalArgumentException("Invalid status");
+        }
+        RequestStatus newRequestStatus = new RequestStatus(request, status, LocalDateTime.now(), "Status updated");
+        request.addRequestStatus(newRequestStatus);
+        creditRequestDAO.update(request);
     }
 }

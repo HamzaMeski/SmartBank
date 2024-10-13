@@ -1,7 +1,6 @@
 package com.smartbank.dao;
 
 import com.smartbank.model.CreditRequest;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
