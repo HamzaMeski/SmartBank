@@ -5,7 +5,7 @@ var span = document.getElementsByClassName("close")[0];
 function updateStatus(requestId) {
     const newStatus = prompt("Enter new status (APPROVED, REJECTED, PENDING):");
     if (newStatus) {
-        fetch(`${pageContext.request.contextPath}/updateStatus`, {
+        fetch(`${contextPath}/updateStatus`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -29,7 +29,7 @@ function updateStatus(requestId) {
 }
 
 function showDetails(requestId) {
-    fetch(`${pageContext.request.contextPath}/requestDetails?id=${requestId}`)
+    fetch(`${contextPath}/requestDetails?id=${requestId}`)
         .then(response => response.json())
         .then(data => {
             const detailsContent = document.getElementById("detailsContent");
