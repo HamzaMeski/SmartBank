@@ -2,15 +2,18 @@ package com.smartbank.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "request_statuses")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RequestStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnoreProperties("requestStatuses")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_request_id", nullable = false)
     private CreditRequest creditRequest;
