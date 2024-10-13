@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @WebServlet("/requestDetails")
 public class RequestDetailsServlet extends HttpServlet {
@@ -25,6 +26,7 @@ public class RequestDetailsServlet extends HttpServlet {
     public void init() throws ServletException {
         creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());  // This is the key line
     }
 
     @Override
