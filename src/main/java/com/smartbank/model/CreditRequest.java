@@ -6,9 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "credit_requests")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CreditRequest {
 
     @Id
@@ -66,6 +68,7 @@ public class CreditRequest {
     @Column(name = "request_date", nullable = false)
     private LocalDateTime requestDate;
 
+    @JsonIgnoreProperties("creditRequest")
     @OneToMany(mappedBy = "creditRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RequestStatus> requestStatuses = new HashSet<>();
 
