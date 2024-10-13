@@ -45,6 +45,10 @@
   </div>
 </div>
 
+<script>
+  // Add this before including the JavaScript file
+  var contextPath = '${pageContext.request.contextPath}';
+</script>
 <script src="${pageContext.request.contextPath}/js/creditRequestList.js"></script>
 </body>
 </html>
