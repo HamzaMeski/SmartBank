@@ -237,4 +237,14 @@ public class CreditRequest {
         requestStatuses.remove(requestStatus);
         requestStatus.setCreditRequest(null);
     }
+
+    public String getCurrentStatus() {
+        if (requestStatuses != null && !requestStatuses.isEmpty()) {
+            return requestStatuses.stream()
+                    .max(java.util.Comparator.comparing(RequestStatus::getModificationDate))
+                    .map(rs -> rs.getStatus().getName())
+                    .orElse("Unknown");
+        }
+        return "Unknown";
+    }
 }

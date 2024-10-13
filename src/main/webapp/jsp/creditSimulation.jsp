@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demander mon crédit en ligne</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/creditSimulation.css">
 </head>
 
 <body>
@@ -200,6 +200,6 @@
     </section>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/script.js"></script>
+<script src="${pageContext.request.contextPath}/js/creditSimulation.js"></script>
 </body>
 </html>

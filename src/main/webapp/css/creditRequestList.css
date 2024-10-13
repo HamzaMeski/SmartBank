@@ -1,0 +1,95 @@
+
+.credit-request-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.credit-request-table th, .credit-request-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.credit-request-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.credit-request-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.credit-request-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+button {
+    padding: 5px 10px;
+    margin: 2px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#detailsContent {
+    margin-top: 20px;
+}
+
+#detailsContent p {
+    margin: 10px 0;
+}
+
+#detailsContent ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#detailsContent li {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 3px;
+}
