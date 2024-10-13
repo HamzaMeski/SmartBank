@@ -46,7 +46,7 @@ function showDetails(requestId) {
             <h3>Status History</h3>
             <ul>
                 ${data.requestStatuses.map(status => `
-                    <li>${status.status.name} - ${new Date(status.modificationDate).toLocaleString()}</li>
+                    <li>${status.statusName} - ${new Date(status.modificationDate).toLocaleString()}</li>
                 `).join('')}
             </ul>
         `;
