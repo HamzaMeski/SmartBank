@@ -2,31 +2,56 @@
 var modal = document.getElementById("detailsModal");
 var span = document.getElementsByClassName("close")[0];
 
+console.log(span)
+
 function updateStatus(requestId) {
-    const newStatus = prompt("Enter new status (APPROVED, REJECTED, PENDING):");
-    if (newStatus) {
-        fetch(`${contextPath}/updateStatus`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `id=${requestId}&status=${newStatus}`
+    const statusModal = document.createElement('div');
+    statusModal.className = 'status-modal';
+    statusModal.innerHTML = `
+        <div class="status-modal-content">
+            <h2>Update Status</h2>
+            <button onclick="submitStatus('${requestId}', 'APPROVED')">APPROVED</button>
+            <button onclick="submitStatus('${requestId}', 'REJECTED')">REJECTED</button>
+            <button onclick="submitStatus('${requestId}', 'PENDING')">PENDING</button>
+            <button onclick="closeStatusModal()">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(statusModal);
+}
+
+function submitStatus(requestId, newStatus) {
+    fetch(`${contextPath}/updateStatus`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `id=${requestId}&status=${newStatus}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Status updated successfully");
+                location.reload(); // Reload the page to reflect changes
+            } else {
+                alert("Failed to update status: " + data.message);
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Status updated successfully");
-                    location.reload(); // Reload the page to reflect changes
-                } else {
-                    alert("Failed to update status: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("An error occurred while updating the status");
-            });
+        .catch(error => {
+            console.error('Error:', error);
+            alert("An error occurred while updating the status");
+        })
+        .finally(() => {
+            closeStatusModal();
+        });
+}
+
+function closeStatusModal() {
+    const statusModal = document.querySelector('.status-modal');
+    if (statusModal) {
+        statusModal.remove();
     }
 }
+
 
 function showDetails(requestId) {
     fetch(`${contextPath}/requestDetails?id=${requestId}`)
