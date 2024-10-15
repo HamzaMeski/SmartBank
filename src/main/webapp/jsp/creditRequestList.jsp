@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Credit Request List</h1>
+  <form method="GET" action="${pageContext.request.contextPath}/creditRequest" class="nav-button"><button type="submit">New Credit Simulation</button></form>
   <table class="credit-request-table">
     <thead>
     <tr>
