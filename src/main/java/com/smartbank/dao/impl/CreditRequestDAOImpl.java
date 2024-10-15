@@ -70,7 +70,13 @@ public class CreditRequestDAOImpl implements CreditRequestDAO {
         EntityManager em = emf.createEntityManager();
         try {
             TypedQuery<CreditRequest> query = em.createQuery(
-                    "SELECT cr FROM CreditRequest cr JOIN cr.requestStatuses rs WHERE DATE(cr.requestDate) = :date AND rs.status.name = :status",
+                    "SELECT DISTINCT cr FROM CreditRequest cr " +
+                            "JOIN cr.requestStatuses rs " +
+                            "WHERE DATE(rs.modificationDate) = :date " +
+                            "AND rs.status.name = :status " +
+                            "AND rs.id = (SELECT MAX(rs2.id) FROM RequestStatus rs2 " +
+                            "              WHERE rs2.creditRequest = cr " +
+                            "              AND DATE(rs2.modificationDate) <= :date)",
                     CreditRequest.class);
             query.setParameter("date", date.toLocalDate());
             query.setParameter("status", status);
@@ -79,6 +85,7 @@ public class CreditRequestDAOImpl implements CreditRequestDAO {
             em.close();
         }
     }
+
 
     @Override
     public void update(CreditRequest creditRequest) {
