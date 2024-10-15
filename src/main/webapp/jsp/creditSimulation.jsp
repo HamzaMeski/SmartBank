@@ -17,10 +17,7 @@
 
 <body>
 <div class="container">
-    <div class="header">
-        <h1>Demander mon crédit en ligne</h1>
-        <a href="#" class="back-link">← Retour</a>
-    </div>
+    <form method="GET" action="${pageContext.request.contextPath}/creditRequestList" class="nav-button"><button type="submit">New Credit Simulation</button></form>
     <section>
         <div class="steps-content">
             <div class="steps">

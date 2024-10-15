@@ -95,7 +95,7 @@ public class RequestDetailsServlet extends HttpServlet {
             for (RequestStatus status : creditRequest.getRequestStatuses()) {
                 gen.writeStartObject();
                 gen.writeNumberField("id", status.getId());
-                gen.writeStringField("status", status.getStatus().getName());
+                gen.writeStringField("statusName", status.getStatus().getName());
                 gen.writeStringField("modificationDate", status.getModificationDate().toString());
                 gen.writeStringField("explanation", status.getExplanation());
                 gen.writeEndObject();

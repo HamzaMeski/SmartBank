@@ -31,6 +31,16 @@ public class CreditRequestServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
+        try {
+            response.sendRedirect(request.getContextPath() + "/jsp/creditSimulation.jsp");
+        } catch(Exception e) {
+            request.setAttribute("error", "An error occured: " + e.getMessage());
+            request.getRequestDispatcher("/jsp/error.jsp");
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOGGER.info("Servlet POST method called");
         logFormFields(request);
