@@ -9,6 +9,19 @@
 <body>
 <form method="GET" action="${pageContext.request.contextPath}/creditRequest" class="nav-button"><button type="submit">New Credit Simulation</button></form>
 <div class="container">
+
+  <form method="GET" action="${pageContext.request.contextPath}/creditRequestList" class="nav-button"><button type="submit">All Credit Requests</button></form>
+
+  <form method="GET" action="${pageContext.request.contextPath}/creditRequestList">
+    <input type="date" name="date" required>
+    <select name="status" required>
+      <option value="PENDING">PENDING</option>
+      <option value="APPROVED">APPROVED</option>
+      <option value="REJECTED">REJECTED</option>
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+
   <table class="credit-request-table">
     <thead>
     <tr>

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @WebServlet("/creditRequestList")
 public class CreditRequestListServlet extends HttpServlet {
@@ -29,9 +31,18 @@ public class CreditRequestListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<CreditRequest> creditRequests = creditRequestService.getAllCreditRequests();
+        String dateStr = request.getParameter("date");
+        String status = request.getParameter("status");
 
-        // Log the credit requests
+        List<CreditRequest> creditRequests;
+
+        if (dateStr != null && !dateStr.isEmpty() && status != null && !status.isEmpty()) {
+            LocalDateTime date = LocalDate.parse(dateStr).atStartOfDay();
+            creditRequests = creditRequestService.filterCreditRequests(date, status);
+        } else {
+            creditRequests = creditRequestService.getAllCreditRequests();
+        }
+
         logCreditRequests(creditRequests);
 
         request.setAttribute("creditRequests", creditRequests);

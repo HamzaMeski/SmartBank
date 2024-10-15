@@ -146,8 +146,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
 
-
-
     /* Credit List menu */
     @Override
     public List<CreditRequest> getAllCreditRequests() {
@@ -172,5 +170,10 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         RequestStatus newRequestStatus = new RequestStatus(request, status, LocalDateTime.now(), "Status updated");
         request.addRequestStatus(newRequestStatus);
         creditRequestDAO.update(request);
+    }
+
+    @Override
+    public List<CreditRequest> filterCreditRequests(LocalDateTime date, String status) {
+        return creditRequestDAO.findByDateAndStatus(date, status);
     }
 }
