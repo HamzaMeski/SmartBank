@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/creditRequestList.css">
 </head>
 <body>
+<form method="GET" action="${pageContext.request.contextPath}/creditRequest" class="nav-button"><button type="submit">New Credit Simulation</button></form>
 <div class="container">
-  <form method="GET" action="${pageContext.request.contextPath}/creditRequest" class="nav-button"><button type="submit">New Credit Simulation</button></form>
   <table class="credit-request-table">
     <thead>
     <tr>

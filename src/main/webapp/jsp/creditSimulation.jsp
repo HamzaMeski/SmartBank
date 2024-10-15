@@ -16,8 +16,8 @@
 </head>
 
 <body>
+<form method="GET" action="${pageContext.request.contextPath}/creditRequestList" class="nav-button"><button type="submit">List des Credit Requests</button></form>
 <div class="container">
-    <form method="GET" action="${pageContext.request.contextPath}/creditRequestList" class="nav-button"><button type="submit">New Credit Simulation</button></form>
     <section>
         <div class="steps-content">
             <div class="steps">
