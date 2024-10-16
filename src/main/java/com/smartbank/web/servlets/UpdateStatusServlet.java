@@ -13,17 +13,14 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.inject.Inject;
 
 @WebServlet("/updateStatus")
 public class UpdateStatusServlet extends HttpServlet {
+    @Inject
     private CreditRequestService creditRequestService;
+    @Inject
     private ObjectMapper objectMapper;
-
-    @Override
-    public void init() throws ServletException {
-        creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
-        objectMapper = new ObjectMapper();
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

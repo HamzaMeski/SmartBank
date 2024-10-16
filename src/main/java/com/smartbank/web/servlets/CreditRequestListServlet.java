@@ -17,17 +17,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import jakarta.inject.Inject;
 
 @WebServlet("/creditRequestList")
 public class CreditRequestListServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(CreditRequestListServlet.class.getName());
+    @Inject
     private CreditRequestService creditRequestService;
 
-    @Override
-    public void init() throws ServletException {
-        creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

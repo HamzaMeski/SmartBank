@@ -21,26 +21,16 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import jakarta.inject.Inject;
 
 @WebServlet("/requestDetails")
 public class RequestDetailsServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(RequestDetailsServlet.class.getName());
+    @Inject
     private CreditRequestService creditRequestService;
+    @Inject
     private ObjectMapper objectMapper;
 
-    @Override
-    public void init() throws ServletException {
-        creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
-        // Add custom serializer for CreditRequest
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(CreditRequest.class, new CreditRequestSerializer());
-        objectMapper.registerModule(module);
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

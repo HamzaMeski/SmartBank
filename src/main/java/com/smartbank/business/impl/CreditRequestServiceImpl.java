@@ -15,11 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.regex.Pattern;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class CreditRequestServiceImpl implements CreditRequestService {
 
-    private final CreditRequestDAO creditRequestDAO;
-    private final StatusDAO statusDAO;
+    @Inject
+    private  CreditRequestDAO creditRequestDAO;
+    @Inject
+    private  StatusDAO statusDAO;
     private static final double ANNUAL_INTEREST_RATE = 0.05; // 5% annual interest rate
 
     // Validation regex patterns
@@ -31,11 +36,6 @@ public class CreditRequestServiceImpl implements CreditRequestService {
         VALIDATION_PATTERNS.put("prenom", Pattern.compile("^[A-Za-zÀ-ÿ\\s'-]{2,50}$"));
         VALIDATION_PATTERNS.put("cin", Pattern.compile("^[A-Z]{1,2}\\d{5,6}$"));
         VALIDATION_PATTERNS.put("revenuMensuel", Pattern.compile("^\\d+(\\.\\d{1,2})?$"));
-    }
-
-    public CreditRequestServiceImpl(CreditRequestDAO creditRequestDAO, StatusDAO statusDAO) {
-        this.creditRequestDAO = creditRequestDAO;
-        this.statusDAO = statusDAO;
     }
 
     @Override
