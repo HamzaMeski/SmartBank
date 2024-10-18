@@ -56,12 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.setCustomValidity(errorMessage);
         if (!isValid) {
-            input.reportValidity(); // This will show the validation message
+            input.reportValidity();
         }
         return isValid;
     };
 
-    // Function to update the recap section
     const updateRecap = () => {
         recapContent.innerHTML = '';
         Object.keys(formData).forEach((key) => {
@@ -72,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Function to navigate to a particular section
     const showSection = (index) => {
         formSections.forEach((section, i) => {
             section.style.display = i === index ? "block" : "none";
@@ -83,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
         currentStep = index;
     };
 
-    // Check if all required fields in a section are filled and valid
     const isSectionValid = (sectionIndex) => {
         const inputs = formSections[sectionIndex].querySelectorAll("input, select, textarea");
         return Array.from(inputs).every(input => {
@@ -96,14 +93,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Enable navigation between sections if all sections are filled
     const toggleStepNavigation = () => {
         stepIndicators.forEach((step, index) => {
             step.classList.toggle("navigable", isSectionValid(index));
         });
     };
 
-    // Real-time form data collection and validation
     const inputs = document.querySelectorAll("input, select, textarea");
     inputs.forEach((input) => {
         input.addEventListener("input", () => {
@@ -117,10 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Initial display
     showSection(currentStep);
 
-    // Continue button event listener for moving to the next section
     continueButtons.forEach((button, index) => {
         button.addEventListener("click", () => {
             if (isSectionValid(currentStep)) {
@@ -133,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Step navigation by clicking on step titles
     stepIndicators.forEach((step, index) => {
         step.addEventListener("click", () => {
             if (isSectionValid(index)) {
@@ -142,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Loan calculation logic
     const montantInput = document.getElementById("montant");
     const montantRange = document.getElementById("amount-range");
     const dureeInput = document.getElementById("duree");
@@ -153,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const calculateLoan = (changedField) => {
         const montant = parseFloat(montantInput.value);
         const duree = parseInt(dureeInput.value);
-        const tauxAnnuel = 0.05; // 5% annual interest rate (adjust as needed)
+        const tauxAnnuel = 0.05;
         const tauxMensuel = tauxAnnuel / 12;
 
         if (changedField !== 'mensualites') {
@@ -165,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             montantInput.value = montantRange.value = calculatedMontant.toFixed(2);
         }
 
-        // Update formData
         formData['montant'] = montantInput.value;
         formData['duree'] = dureeInput.value;
         formData['mensualites'] = mensualitesInput.value;
@@ -188,14 +178,30 @@ document.addEventListener("DOMContentLoaded", () => {
     syncInputs(dureeInput, dureeRange, 'duree');
     syncInputs(mensualitesInput, mensualitesRange, 'mensualites');
 
-    // Initial calculation
     calculateLoan('montant');
 
-    // Show/Hide additional fields based on radio selection
     const creditRadioGroup = document.getElementById("credit-radio-group");
     const additionalInputsContainer = document.getElementById("additional-inputs");
 
     creditRadioGroup.addEventListener("change", (event) => {
         additionalInputsContainer.style.display = event.target.value === "Oui" ? "block" : "none";
     });
+
+    const form = document.getElementById('creditForm');
+    form.addEventListener('submit', function(event) {
+        if (!isFormValid()) {
+            event.preventDefault();
+            alert('Please fill all fields correctly before submitting.');
+        }
+    });
+
+    function isFormValid() {
+        const allInputs = form.querySelectorAll('input, select, textarea');
+        for (let input of allInputs) {
+            if (!validateInput(input)) {
+                return false;
+            }
+        }
+        return true;
+    }
 });
