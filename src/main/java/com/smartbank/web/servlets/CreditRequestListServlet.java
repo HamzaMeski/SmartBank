@@ -1,9 +1,6 @@
 package com.smartbank.web.servlets;
 
 import com.smartbank.business.CreditRequestService;
-import com.smartbank.business.impl.CreditRequestServiceImpl;
-import com.smartbank.dao.impl.CreditRequestDAOImpl;
-import com.smartbank.dao.impl.StatusDAOImpl;
 import com.smartbank.model.CreditRequest;
 
 import jakarta.servlet.ServletException;
@@ -17,17 +14,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import jakarta.inject.Inject;
 
 @WebServlet("/creditRequestList")
 public class CreditRequestListServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(CreditRequestListServlet.class.getName());
-    private CreditRequestService creditRequestService;
 
-    @Override
-    public void init() throws ServletException {
-        creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
-    }
+    @Inject
+    private CreditRequestService creditRequestService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
