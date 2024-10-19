@@ -84,20 +84,12 @@ public class CreditRequestServiceImpl implements CreditRequestService {
     }
 
     private void calculateLoan(CreditRequest creditRequest) {
-        double montant = creditRequest.getAmount();
         int duree = creditRequest.getDuration();
         double tauxMensuel = ANNUAL_INTEREST_RATE / 12;
 
-        if (creditRequest.getMonthlyPayment() == null || creditRequest.getMonthlyPayment() == 0) {
-            // Calculate monthly payment if not provided
-            double mensualite = (montant * tauxMensuel) / (1 - Math.pow(1 + tauxMensuel, -duree));
-            creditRequest.setMonthlyPayment(Math.round(mensualite * 100.0) / 100.0); // Round to 2 decimal places
-        } else {
-            // Recalculate amount if monthly payment is provided
-            double mensualite = creditRequest.getMonthlyPayment();
-            double calculatedMontant = (mensualite * (1 - Math.pow(1 + tauxMensuel, -duree))) / tauxMensuel;
-            creditRequest.setAmount(Math.round(calculatedMontant * 100.0) / 100.0); // Round to 2 decimal places
-        }
+        double mensualite = creditRequest.getMonthlyPayment();
+        double calculatedMontant = (mensualite * (1 - Math.pow(1 + tauxMensuel, -duree))) / tauxMensuel;
+        creditRequest.setAmount(Math.round(calculatedMontant * 100.0) / 100.0); // Round to 2 decimal places
     }
 
     private void validateField(String fieldName, String value, Map<String, String> errors) {
