@@ -1,9 +1,6 @@
 package com.smartbank.web.servlets;
 
 import com.smartbank.business.CreditRequestService;
-import com.smartbank.business.impl.CreditRequestServiceImpl;
-import com.smartbank.dao.impl.CreditRequestDAOImpl;
-import com.smartbank.dao.impl.StatusDAOImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,15 +10,17 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 @WebServlet("/updateStatus")
 public class UpdateStatusServlet extends HttpServlet {
+    @Inject
     private CreditRequestService creditRequestService;
     private ObjectMapper objectMapper;
 
-    @Override
-    public void init() throws ServletException {
-        creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
+    @PostConstruct
+    public void init() {
         objectMapper = new ObjectMapper();
     }
 

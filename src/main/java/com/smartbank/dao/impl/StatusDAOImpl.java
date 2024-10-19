@@ -8,7 +8,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class StatusDAOImpl implements StatusDAO {
     private final EntityManagerFactory emf;
 

@@ -10,7 +10,9 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class CreditRequestDAOImpl implements CreditRequestDAO {
     private final EntityManagerFactory emf;
 

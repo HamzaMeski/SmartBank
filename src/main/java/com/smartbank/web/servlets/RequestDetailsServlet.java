@@ -1,9 +1,6 @@
 package com.smartbank.web.servlets;
 
 import com.smartbank.business.CreditRequestService;
-import com.smartbank.business.impl.CreditRequestServiceImpl;
-import com.smartbank.dao.impl.CreditRequestDAOImpl;
-import com.smartbank.dao.impl.StatusDAOImpl;
 import com.smartbank.model.CreditRequest;
 import com.smartbank.model.RequestStatus;
 import jakarta.servlet.ServletException;
@@ -21,16 +18,18 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 @WebServlet("/requestDetails")
 public class RequestDetailsServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(RequestDetailsServlet.class.getName());
+    @Inject
     private CreditRequestService creditRequestService;
     private ObjectMapper objectMapper;
 
-    @Override
-    public void init() throws ServletException {
-        creditRequestService = new CreditRequestServiceImpl(new CreditRequestDAOImpl(), new StatusDAOImpl());
+    @PostConstruct
+    public void init() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
